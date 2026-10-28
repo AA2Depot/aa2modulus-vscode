@@ -1,0 +1,20 @@
+# Package only the manifest, compiled client, grammar, language configuration, walkthrough media, README and LICENSE.
+# vsce already omits devDependencies from node_modules.
+.github/**
+.vscode/**
+.vscode-test/**
+src/**
+test/**
+out/test/**
+**/*.map
+**/*.ts
+agent_data/**
+docs/**
+CLAUDE.md
+AGENTS.md
+mise.toml
+eslint.config.mjs
+tsconfig*.json
+.gitignore
+.editorconfig
+.gitattributes

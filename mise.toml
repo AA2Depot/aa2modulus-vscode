@@ -1,0 +1,11 @@
+[tools]
+node = "24"
+"npm:@vscode/vsce" = "4.0.0"
+
+[tasks.check]
+description = "Offline tests and lint"
+run = ["npm test", "npm run lint"]
+
+[tasks.package]
+description = "Build the VSIX package"
+run = "vsce package"

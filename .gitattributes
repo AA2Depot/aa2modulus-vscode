@@ -1,0 +1,4 @@
+# Check out LF everywhere; Git for Windows defaults to CRLF.
+* text=auto eol=lf
+# Zip fixtures are binary.
+*.zip binary

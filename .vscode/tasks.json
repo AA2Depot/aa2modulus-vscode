@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "AA2M extension: compile",
+      "type": "npm",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$tsc",
+      "script": "compile"
+    },
+    {
+      "label": "AA2M extension: watch",
+      "type": "npm",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch",
+      "script": "watch"
+    },
+    {
+      "label": "AA2M extension: test",
+      "type": "npm",
+      "group": "test",
+      "problemMatcher": "$tsc",
+      "script": "test"
+    },
+    {
+      "label": "AA2M extension: lint",
+      "type": "npm",
+      "problemMatcher": [],
+      "script": "lint"
+    }
+  ]
+}

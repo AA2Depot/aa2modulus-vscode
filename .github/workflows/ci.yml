@@ -1,0 +1,61 @@
+name: "[CI] Lint & Test"
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: node
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+  server:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: node
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The newest toolchain release, prereleases included.
+      - name: Download the server
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release list --repo AA2Depot/AA2Modulus --limit 1 --json tagName --jq '.[0].tagName')
+          echo "Toolchain release $tag"
+          gh release download "$tag" --repo AA2Depot/AA2Modulus --pattern aa2modulus-linux-x64.zip --dir "$RUNNER_TEMP"
+          unzip -q "$RUNNER_TEMP/aa2modulus-linux-x64.zip" -d "$RUNNER_TEMP/aa2modulus"
+          (cd "$RUNNER_TEMP/aa2modulus" && sha256sum -c SHA256SUMS)
+          chmod +x "$RUNNER_TEMP/aa2modulus/aa2modulus"
+
+      - name: Server acceptance
+        run: AA2M_SERVER_COMMAND="$RUNNER_TEMP/aa2modulus/aa2modulus" npm run test:server

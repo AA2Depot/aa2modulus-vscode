@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "AA2M",
+  "scopeName": "source.aa2m",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.aa2m",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.aa2m",
+          "begin": "/\\*",
+          "beginCaptures": { "0": { "name": "punctuation.definition.comment.begin.aa2m" } },
+          "end": "\\*/",
+          "endCaptures": { "0": { "name": "punctuation.definition.comment.end.aa2m" } }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple.aa2m",
+          "begin": "\"\"\"",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.aa2m" } },
+          "end": "\"\"\"",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.aa2m" } },
+          "patterns": [{ "include": "#stringEscapes" }]
+        },
+        {
+          "name": "string.quoted.double.aa2m",
+          "begin": "\"",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.aa2m" } },
+          "end": "\"|$",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.aa2m" } },
+          "patterns": [{ "include": "#stringEscapes" }]
+        }
+      ]
+    },
+    "stringEscapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.aa2m",
+          "match": "\\\\(?:[\"\\\\/bfnrt]|u[0-9A-Fa-f]{4})"
+        },
+        {
+          "name": "invalid.illegal.escape.aa2m",
+          "match": "\\\\(?:.|$)"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.aa2m",
+          "match": "(?<![A-Za-z0-9_.])0[xX][0-9A-Fa-f]{1,8}(?![A-Za-z0-9_.])"
+        },
+        {
+          "name": "constant.numeric.float.aa2m",
+          "match": "(?<![A-Za-z0-9_.])(?:[0-9]+\\.[0-9]*|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?[fF]?(?![A-Za-z0-9_.])"
+        },
+        {
+          "name": "constant.numeric.integer.aa2m",
+          "match": "(?<![A-Za-z0-9_.])[0-9]+(?![A-Za-z0-9_.])"
+        }
+      ]
+    }
+  }
+}

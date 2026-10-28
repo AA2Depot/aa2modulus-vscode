@@ -1,0 +1,6 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "AA2M Library",
+  "scopeName": "source.aa2mi",
+  "patterns": [{ "include": "source.aa2m" }]
+}

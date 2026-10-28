@@ -1,0 +1,340 @@
+{
+  "name": "aa2m",
+  "displayName": "AA2M Language",
+  "description": "AAUnlimited module and library authoring with an external aa2modulus language server",
+  "version": "1.0.0",
+  "repository": "https://github.com/AA2Depot/aa2modulus-vscode",
+  "publisher": "AA2Depot",
+  "license": "GPL-3.0-only",
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "AAUnlimited",
+    "aa2m",
+    "aa2mi",
+    "language server"
+  ],
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.8.0",
+      "onFail": "error"
+    }
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./out/src/extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Comments, strings and numbers are colored in Restricted Mode. Everything else comes from the external language server, which starts after workspace trust is granted.",
+      "restrictedConfigurations": [
+        "aa2m.server.command",
+        "aa2m.server.args",
+        "aa2m.server.cwd"
+      ]
+    },
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "The server resolves file imports on the extension host filesystem."
+    }
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "aa2m",
+        "aliases": [
+          "AA2M",
+          "AAUnlimited Module"
+        ],
+        "extensions": [
+          ".aa2m"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "aa2mi",
+        "aliases": [
+          "AA2MI",
+          "AAUnlimited Library"
+        ],
+        "extensions": [
+          ".aa2mi"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "aa2m",
+        "scopeName": "source.aa2m",
+        "path": "./syntaxes/aa2m.tmLanguage.json"
+      },
+      {
+        "language": "aa2mi",
+        "scopeName": "source.aa2mi",
+        "path": "./syntaxes/aa2mi.tmLanguage.json"
+      }
+    ],
+    "configurationDefaults": {
+      "workbench.editorAssociations": {
+        "aa2m-builtin:/**": "vscode.markdown.preview.editor"
+      },
+      "[aa2m]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+      },
+      "[aa2mi]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+      }
+    },
+    "semanticTokenScopes": [
+      {
+        "language": "aa2m",
+        "scopes": {
+          "variable.defaultLibrary.readonly": [
+            "constant.language.aa2m"
+          ],
+          "macro": [
+            "entity.name.function.aa2m"
+          ]
+        }
+      },
+      {
+        "language": "aa2mi",
+        "scopes": {
+          "variable.defaultLibrary.readonly": [
+            "constant.language.aa2m"
+          ],
+          "macro": [
+            "entity.name.function.aa2m"
+          ]
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "aa2m.restartServer",
+        "title": "AA2M: Restart Language Server"
+      },
+      {
+        "command": "aa2m.selectServer",
+        "title": "AA2M: Select Server Executable…"
+      },
+      {
+        "command": "aa2m.downloadServer",
+        "title": "AA2M: Download Language Server…"
+      },
+      {
+        "command": "aa2m.browseBuiltins",
+        "title": "AA2M: Browse Built-ins",
+        "enablement": "isWorkspaceTrusted"
+      },
+      {
+        "command": "aa2m.showOutput",
+        "title": "AA2M: Show Language Server Output"
+      },
+      {
+        "command": "aa2m.compileModule",
+        "title": "AA2M: Compile Module",
+        "icon": "$(tools)",
+        "enablement": "isWorkspaceTrusted"
+      },
+      {
+        "command": "aa2m.decompileModule",
+        "title": "AA2M: Decompile Module",
+        "enablement": "isWorkspaceTrusted"
+      },
+      {
+        "command": "aa2m.newModule",
+        "title": "AA2M: New Module",
+        "shortTitle": "AA2M Module"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "aa2m.compileModule",
+          "when": "resourceLangId == aa2m && isWorkspaceTrusted && !aa2m.compileUnsupported",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "aa2m.compileModule",
+          "when": "editorLangId == aa2m && !aa2m.compileUnsupported"
+        },
+        {
+          "command": "aa2m.decompileModule",
+          "when": "!aa2m.decompileUnsupported"
+        },
+        {
+          "command": "aa2m.browseBuiltins",
+          "when": "!aa2m.builtinCatalogUnsupported"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "aa2m.compileModule",
+          "when": "resourceLangId == aa2m && isWorkspaceTrusted && !aa2m.compileUnsupported",
+          "group": "aa2m@1"
+        },
+        {
+          "command": "aa2m.decompileModule",
+          "when": "!explorerResourceIsFolder && resourceExtname == '' && isWorkspaceTrusted && !aa2m.decompileUnsupported",
+          "group": "aa2m@2"
+        }
+      ],
+      "file/newFile": [
+        {
+          "command": "aa2m.newModule",
+          "group": "file"
+        }
+      ]
+    },
+    "problemMatchers": [
+      {
+        "name": "aa2m",
+        "label": "AA2M CLI diagnostics",
+        "owner": "aa2m-cli",
+        "source": "aa2modulus cli",
+        "fileLocation": [
+          "autoDetect",
+          "${workspaceFolder}"
+        ],
+        "pattern": {
+          "regexp": "^(.+?):(\\d+):(\\d+): (error|warning|info)\\[([A-Z0-9_]+)\\]: (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    ],
+    "configuration": {
+      "title": "AA2M",
+      "properties": {
+        "aa2m.server.command": {
+          "type": "string",
+          "default": "aa2modulus",
+          "scope": "machine-overridable",
+          "description": "External server executable path, or a command on the extension host PATH. Use aa2modulus.exe on Windows. Arguments belong in aa2m.server.args. Changing this setting restarts the server."
+        },
+        "aa2m.server.args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "lsp-server"
+          ],
+          "scope": "machine-overridable",
+          "description": "Arguments passed individually to the external executable over stdio. No shell is used. Changing this setting restarts the server."
+        },
+        "aa2m.server.cwd": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "description": "Optional absolute working directory for the external server. Empty uses the language client default. Standalone executables need no toolchain checkout. Changing this setting restarts the server."
+        },
+        "aa2m.checkForServerUpdates": {
+          "type": "boolean",
+          "default": true,
+          "scope": "machine-overridable",
+          "description": "Once a day after the language server starts, list the aa2modulus releases on GitHub and say when a newer one supports this extension. Turn off to make no such requests."
+        },
+        "aa2m.trace.server": {
+          "type": "string",
+          "enum": [
+            "messages",
+            "verbose"
+          ],
+          "default": "messages",
+          "scope": "window",
+          "description": "Detail of language-server communication traces. Tracing is on only while the AA2M Language Server output channel's log level is Trace (Developer: Set Log Level…)."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "gettingStarted",
+        "title": "Get Started with AA2M",
+        "description": "Set up the aa2modulus language server, write a module and compile it.",
+        "steps": [
+          {
+            "id": "selectServer",
+            "title": "Set up the language server",
+            "description": "Diagnostics, completion and module commands come from the aa2modulus language server. Download a release from the toolchain, or point the extension at an executable you already have.\n[Download Server](command:aa2m.downloadServer)\n[Select Existing Executable](command:aa2m.selectServer)",
+            "media": {
+              "markdown": "media/walkthrough/select-server.md"
+            },
+            "completionEvents": [
+              "onSettingChanged:aa2m.server.command"
+            ]
+          },
+          {
+            "id": "createModule",
+            "title": "Create a module",
+            "description": "Start from the language server's module skeleton, or open an existing .aa2m file.\n[New AA2M Module](command:aa2m.newModule)",
+            "media": {
+              "markdown": "media/walkthrough/create-module.md"
+            },
+            "completionEvents": [
+              "onLanguage:aa2m"
+            ]
+          },
+          {
+            "id": "compileModule",
+            "title": "Compile it",
+            "description": "Save the module, then compile it into the binary module AAUnlimited loads. Problems appear in the editor and the Problems panel.\n[Compile Module](command:aa2m.compileModule)",
+            "media": {
+              "markdown": "media/walkthrough/compile-module.md"
+            },
+            "completionEvents": [
+              "onCommand:aa2m.compileModule"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run clean && tsc -p tsconfig.build.json",
+    "clean": "node -e \"require('node:fs').rmSync('out', { recursive: true, force: true })\"",
+    "precompile": "npm run clean",
+    "compile": "tsc -p .",
+    "watch": "tsc -p . --watch",
+    "lint": "eslint .",
+    "test": "npm run compile && node --test --test-isolation=none \"out/test/unit/**/*.test.js\" \"out/test/lexical/*.test.js\"",
+    "test:server": "npm run compile && node out/test/server/smoke.js",
+    "test:e2e": "npm run compile && node out/test/e2e/runTest.js"
+  },
+  "dependencies": {
+    "jszip": "3.10.1",
+    "vscode-languageclient": "^11.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.100.0",
+    "eslint": "^10.13.0",
+    "mocha": "^12.0.3",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vscode-languageserver-protocol": "3.18.5",
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "^9.3.2"
+  }
+}

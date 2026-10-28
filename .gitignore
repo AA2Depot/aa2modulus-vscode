@@ -1,0 +1,8 @@
+out/
+node_modules/
+.vscode-test/
+*.vsix
+agent_data/
+.claude/
+.codex/
+.agents/
